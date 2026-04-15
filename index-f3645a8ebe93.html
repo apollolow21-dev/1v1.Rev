@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <script>!function(){var n=console.log;console.log=function(){}}();</script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1v1.LOL RELOADED - Play Free Online | Build & Shoot Browser Game</title>
+  <meta name="description" content="Play 1v1.LOL RELOADED free in your browser. Build, edit & shoot in classic 1v1 duels, Box Fight 2v2, Zone Wars and 8+ custom modes. No download required. Party up with friends!">
+  <meta name="keywords" content="1v1 lol, 1v1.lol, build and shoot, browser game, online shooter, box fight, zone wars, free game, no download, multiplayer, party game, build battle">
+  <meta name="author" content="1v1.LOL RELOADED">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://1v1lolreloaded.com/">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://1v1lolreloaded.com/">
+  <meta property="og:title" content="1v1.LOL RELOADED - The Legend Returns">
+  <meta property="og:description" content="The iconic build & shoot game is back. Play free in your browser - 1v1, Box Fight 2v2, Zone Wars and more. No download, no install.">
+  <meta property="og:image" content="https://1v1lolreloaded.com/logo.png">
+  <meta property="og:site_name" content="1v1.LOL RELOADED">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="1v1.LOL RELOADED - The Legend Returns">
+  <meta name="twitter:description" content="The iconic build & shoot game is back. Play free in your browser. No download required.">
+  <meta name="twitter:image" content="https://1v1lolreloaded.com/logo.png">
+
+  <!-- Theme -->
+  <meta name="theme-color" content="#08080f">
+  <meta name="msapplication-TileColor" content="#08080f">
+
+  <link rel="icon" href="/favicon.ico">
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-WK65K45ZPE"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-WK65K45ZPE');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Exo+2:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="/tailwind.min.js?v=a8424c59"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: { 400:'#818cf8', 500:'#6366f1', 600:'#4f46e5', 700:'#4338ca' },
+            neon: { blue:'#00d4ff', purple:'#b24dff', pink:'#ff2d95', cyan:'#00fff0' },
+            surface: { 800:'#12121f', 900:'#0c0c16', 950:'#08080f' }
+          },
+          fontFamily: {
+            display: ['Orbitron', 'sans-serif'],
+            body: ['Rajdhani', 'sans-serif'],
+            exo: ['"Exo 2"', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { background: #08080f; overflow-x: hidden; }
+
+    /* Game iframe */
+    .game-wrapper { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; overflow: hidden; }
+    .game-wrapper iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
+
+    /* Neon glow effects */
+    .neon-glow { box-shadow: 0 0 30px rgba(99,102,241,0.2), 0 0 60px rgba(99,102,241,0.05); }
+    .neon-glow-cyan { box-shadow: 0 0 30px rgba(0,212,255,0.15), 0 0 60px rgba(0,212,255,0.05); }
+    .text-glow { text-shadow: 0 0 20px rgba(99,102,241,0.6), 0 0 60px rgba(99,102,241,0.3); }
+    .text-glow-cyan { text-shadow: 0 0 20px rgba(0,212,255,0.5), 0 0 60px rgba(0,212,255,0.2); }
+
+    /* Animated gradient background */
+    .hero-bg {
+      background: radial-gradient(ellipse at 20% 50%, rgba(99,102,241,0.08) 0%, transparent 50%),
+                  radial-gradient(ellipse at 80% 50%, rgba(139,92,246,0.06) 0%, transparent 50%),
+                  radial-gradient(ellipse at 50% 0%, rgba(0,212,255,0.04) 0%, transparent 40%);
+    }
+
+    /* Floating particles animation */
+    @keyframes float { 0%,100% { transform: translateY(0) rotate(0deg); opacity:0.3; } 50% { transform: translateY(-20px) rotate(180deg); opacity:0.8; } }
+    @keyframes pulse-slow { 0%,100% { opacity:0.4; } 50% { opacity:1; } }
+    @keyframes slide-up { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes glow-pulse { 0%,100% { box-shadow: 0 0 20px rgba(99,102,241,0.2); } 50% { box-shadow: 0 0 40px rgba(99,102,241,0.4); } }
+    @keyframes gradient-shift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .animate-float { animation: float 6s ease-in-out infinite; }
+    .animate-pulse-slow { animation: pulse-slow 3s ease-in-out infinite; }
+    .animate-slide-up { animation: slide-up 0.8s ease-out forwards; }
+    .animate-glow-pulse { animation: glow-pulse 3s ease-in-out infinite; }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #818cf8, #00d4ff, #b24dff, #818cf8);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradient-shift 4s ease-in-out infinite;
+    }
+
+    /* Decorative grid overlay */
+    .grid-overlay {
+      background-image: linear-gradient(rgba(99,102,241,0.03) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(99,102,241,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    /* Feature card hover */
+    .feature-card { transition: transform 0.3s, box-shadow 0.3s; }
+    .feature-card:hover { transform: translateY(-4px); box-shadow: 0 8px 30px rgba(99,102,241,0.15); }
+
+    /* Stat counter */
+    .stat-item { border-right: 1px solid rgba(255,255,255,0.05); }
+    .stat-item:last-child { border-right: none; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #08080f; }
+    ::-webkit-scrollbar-thumb { background: #1a1a2e; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #2a2a3e; }
+
+    /* Divider line with glow */
+    .glow-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(99,102,241,0.3), rgba(0,212,255,0.2), transparent);
+    }
+
+    /* Hide ads by default */
+    .ad-slot { display: none; }
+
+    /* Leaderboard */
+    .lb-tab {
+      padding: 0.45rem 0.95rem;
+      border-radius: 0.5rem;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: #9ca3af;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.05);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .lb-tab:hover { color: #fff; background: rgba(255,255,255,0.05); }
+    .lb-tab.active {
+      color: #00d4ff;
+      background: rgba(0,212,255,0.08);
+      border-color: rgba(0,212,255,0.4);
+      box-shadow: 0 0 16px rgba(0,212,255,0.15);
+    }
+    .lb-row { transition: background 0.15s; }
+    .lb-row:hover { background: rgba(99,102,241,0.06); }
+    .lb-rank-1 { color: #facc15 !important; text-shadow: 0 0 14px rgba(250,204,21,0.4); }
+    .lb-rank-2 { color: #d1d5db !important; text-shadow: 0 0 12px rgba(209,213,219,0.3); }
+    .lb-rank-3 { color: #fb923c !important; text-shadow: 0 0 12px rgba(251,146,60,0.3); }
+  </style>
+</head>
+<body class="text-gray-200 min-h-screen font-body">
+
+  <!-- BACKGROUND PARTICLES -->
+  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+    <div class="absolute w-2 h-2 bg-brand-400/20 rounded-full animate-float" style="left:10%; top:20%; animation-delay:0s;"></div>
+    <div class="absolute w-1.5 h-1.5 bg-neon-cyan/20 rounded-full animate-float" style="left:25%; top:60%; animation-delay:1s;"></div>
+    <div class="absolute w-1 h-1 bg-neon-purple/30 rounded-full animate-float" style="left:70%; top:30%; animation-delay:2s;"></div>
+    <div class="absolute w-2 h-2 bg-brand-400/15 rounded-full animate-float" style="left:85%; top:70%; animation-delay:3s;"></div>
+    <div class="absolute w-1.5 h-1.5 bg-neon-pink/15 rounded-full animate-float" style="left:50%; top:15%; animation-delay:4s;"></div>
+    <div class="absolute w-1 h-1 bg-neon-cyan/25 rounded-full animate-float" style="left:40%; top:80%; animation-delay:5s;"></div>
+  </div>
+
+  <!-- HEADER -->
+  <header class="border-b border-white/5 bg-surface-950/90 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-3 group">
+        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-500 to-neon-cyan flex items-center justify-center font-display font-black text-xs text-white">
+          1<span class="text-red-400">v</span>1
+        </div>
+        <span class="font-display text-lg sm:text-xl font-bold tracking-widest">
+          <span class="text-white">1</span><span class="text-red-500">v</span><span class="text-white">1</span><span class="text-neon-cyan">.</span><span class="text-white">LOL</span> <span class="gradient-text">RELOADED</span>
+        </span>
+      </a>
+      <nav class="flex items-center gap-1 sm:gap-2">
+        <a href="#play" class="px-3 py-1.5 text-sm font-exo font-medium rounded-lg hover:bg-white/5 transition hidden sm:block">Play</a>
+        <a href="#leaderboard" class="px-3 py-1.5 text-sm font-exo font-medium rounded-lg hover:bg-white/5 transition hidden sm:block">Top Players</a>
+        <a href="#about" class="px-3 py-1.5 text-sm font-exo font-medium rounded-lg hover:bg-white/5 transition hidden sm:block">About</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="relative z-10">
+
+    <!-- GAME SECTION -->
+    <section id="play" class="max-w-7xl mx-auto px-4 sm:px-6 pt-6 pb-8">
+      <div class="game-wrapper neon-glow animate-glow-pulse" id="game-container">
+        <iframe src="/index.html" id="game-frame" allow="fullscreen; autoplay; clipboard-write" allowfullscreen></iframe>
+      </div>
+    </section>
+
+    <!-- EMBED SECTION -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 pb-6">
+      <div class="bg-surface-800/30 border border-white/5 rounded-xl p-4 sm:p-5">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
+          <div>
+            <h3 class="font-display text-sm font-bold tracking-wider text-white">EMBED ON <span class="text-neon-cyan">YOUR SITE</span></h3>
+            <p class="font-exo text-xs text-gray-500 mt-0.5">Add the game to your website with one line of code</p>
+          </div>
+          <button onclick="copyEmbed()" id="copy-btn" class="shrink-0 px-4 py-2 text-xs font-exo font-medium bg-brand-600/30 hover:bg-brand-600/50 text-brand-300 rounded-lg transition flex items-center gap-1.5">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+            Copy Code
+          </button>
+        </div>
+        <pre id="embed-code" class="font-mono text-xs text-neon-cyan/70 bg-surface-950/50 rounded-lg p-3 overflow-x-auto whitespace-pre-wrap break-all select-all leading-relaxed border border-white/5"></pre>
+
+        <!-- Unblocked version -->
+        <div id="unblocked-section" class="mt-4 pt-4 border-t border-white/5 hidden">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
+            <div>
+              <h3 class="font-display text-sm font-bold tracking-wider text-white">1v1.LOL <span class="text-green-400">UNBLOCKED</span></h3>
+              <p class="font-exo text-xs text-gray-500 mt-0.5">Alternative link for schools and restricted networks</p>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="copyUnblocked()" id="copy-unblocked-btn" class="shrink-0 px-4 py-2 text-xs font-exo font-medium bg-green-600/30 hover:bg-green-600/50 text-green-300 rounded-lg transition flex items-center gap-1.5">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                Copy Link
+              </button>
+              <button onclick="copyUnblockedEmbed()" id="copy-unblocked-embed-btn" class="shrink-0 px-4 py-2 text-xs font-exo font-medium bg-brand-600/30 hover:bg-brand-600/50 text-brand-300 rounded-lg transition flex items-center gap-1.5">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                Copy Code
+              </button>
+            </div>
+          </div>
+          <pre id="unblocked-url" class="font-mono text-xs text-green-400/70 bg-surface-950/50 rounded-lg p-3 overflow-x-auto whitespace-pre-wrap break-all select-all leading-relaxed border border-white/5"></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- GLOWING DIVIDER -->
+    <div class="glow-divider max-w-4xl mx-auto my-4"></div>
+
+    <!-- LEADERBOARD -->
+    <section id="leaderboard" class="py-16 sm:py-20">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6">
+        <h2 class="font-display text-2xl sm:text-3xl font-black tracking-wider text-center mb-3">
+          <span class="text-white">TOP</span> <span class="text-neon-cyan text-glow-cyan">PLAYERS</span>
+        </h2>
+        <p class="font-exo text-center text-gray-500 text-sm mb-8">Only registered players · sign in with Google to compete</p>
+
+        <!-- Filters -->
+        <div class="flex flex-col sm:flex-row gap-4 mb-6 items-start sm:items-center justify-between">
+          <div id="lb-mode-tabs" class="flex flex-wrap gap-2">
+            <button class="lb-tab active" data-mode="wins">Wins</button>
+            <button class="lb-tab" data-mode="kills">Kills</button>
+            <button class="lb-tab" data-mode="rating_1v1">1v1</button>
+            <button class="lb-tab" data-mode="rating_box">Box 2v2</button>
+            <button class="lb-tab" data-mode="rating_custom">Custom</button>
+            <button class="lb-tab" data-mode="rating_elo">Comp</button>
+          </div>
+          <div id="lb-period-tabs" class="flex gap-2">
+            <button class="lb-tab active" data-period="alltime">All Time</button>
+            <button class="lb-tab" data-period="today">Today</button>
+          </div>
+        </div>
+
+        <!-- Table -->
+        <div class="bg-surface-800/40 border border-white/5 rounded-xl overflow-hidden backdrop-blur-sm">
+          <div class="px-4 sm:px-6 py-3 border-b border-white/5 bg-surface-900/40">
+            <div class="grid grid-cols-12 gap-2 sm:gap-4 font-display text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider font-bold">
+              <div class="col-span-1 text-center">#</div>
+              <div class="col-span-5 sm:col-span-4">Player</div>
+              <div class="col-span-2 text-right">Wins</div>
+              <div class="col-span-2 text-right hidden sm:block">Kills</div>
+              <div class="col-span-2 text-right hidden sm:block">K/D</div>
+              <div class="col-span-2 sm:col-span-1 text-right" id="lb-dynamic-col">Rating</div>
+            </div>
+          </div>
+          <div id="lb-rows" class="divide-y divide-white/5">
+            <div class="px-6 py-12 text-center font-exo text-sm text-gray-600">Loading…</div>
+          </div>
+        </div>
+        <div class="text-center mt-4 font-exo text-[11px] text-gray-600">
+          <span id="lb-updated"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- GLOWING DIVIDER -->
+    <div class="glow-divider max-w-4xl mx-auto my-4"></div>
+
+    <!-- HERO ABOUT SECTION -->
+    <section id="about" class="hero-bg grid-overlay py-16 sm:py-24">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6">
+
+        <!-- Main headline -->
+        <div class="text-center mb-16 animate-slide-up">
+          <h2 class="font-display text-4xl sm:text-5xl lg:text-6xl font-black tracking-wider mb-4">
+            <span class="gradient-text">THE LEGEND</span>
+            <br>
+            <span class="text-white text-glow">IS BACK.</span>
+          </h2>
+          <p class="font-exo text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto mt-6 leading-relaxed">
+            The game that defined browser shooters returns. Rebuilt. Reloaded. Ready for war.
+          </p>
+        </div>
+
+        <!-- Story block -->
+        <div class="max-w-4xl mx-auto space-y-8 mb-20">
+          <div class="bg-surface-800/40 border border-white/5 rounded-2xl p-6 sm:p-10 backdrop-blur-sm animate-slide-up" style="animation-delay: 0.2s">
+            <h3 class="font-display text-xl sm:text-2xl font-bold text-neon-cyan text-glow-cyan mb-4 tracking-wide">REMEMBER THIS?</h3>
+            <p class="font-exo text-gray-400 text-base sm:text-lg leading-relaxed mb-4">
+              It's 2 AM. You're in a build fight. Your opponent ramp-rushes, you counter with a floor-wall edit, pull out the shotgun and -<span class="text-white font-semibold">ELIMINATED</span>.
+              Your friend on Discord is losing his mind. You hit the rematch button before the victory screen even fades.
+            </p>
+            <p class="font-exo text-gray-400 text-base sm:text-lg leading-relaxed">
+              That was <span class="text-white font-semibold">1v1.LOL</span> at its peak. Millions of players. Legendary clutches. The purest form of build-and-shoot combat ever made for the browser.
+              And then... the servers went quiet.
+            </p>
+          </div>
+
+          <div class="bg-surface-800/40 border border-white/5 rounded-2xl p-6 sm:p-10 backdrop-blur-sm animate-slide-up" style="animation-delay: 0.4s">
+            <h3 class="font-display text-xl sm:text-2xl font-bold text-brand-400 text-glow mb-4 tracking-wide">UNTIL NOW.</h3>
+            <p class="font-exo text-gray-400 text-base sm:text-lg leading-relaxed mb-4">
+              <span class="text-white font-semibold">1v1.LOL RELOADED</span> is a community-driven revival that brings back everything you loved.
+              Same mechanics. Same adrenaline. Same "one more game" at 4 AM when you have work tomorrow.
+            </p>
+            <p class="font-exo text-gray-400 text-base sm:text-lg leading-relaxed">
+              We're talking the full package: classic <span class="text-neon-cyan font-medium">1v1 duels</span>, brutal <span class="text-neon-cyan font-medium">Box Fight 2v2</span>,
+              frantic <span class="text-neon-cyan font-medium">Zone Wars</span>, creative <span class="text-neon-cyan font-medium">Build Races</span>, and <span class="text-neon-cyan font-medium">8 custom party modes</span>
+              for when you want to get weird with your squad. All running right here in your browser. No downloads, no launchers, no excuses.
+            </p>
+          </div>
+
+          <div class="bg-surface-800/40 border border-white/5 rounded-2xl p-6 sm:p-10 backdrop-blur-sm animate-slide-up" style="animation-delay: 0.6s">
+            <h3 class="font-display text-xl sm:text-2xl font-bold text-neon-purple text-glow mb-4 tracking-wide" style="text-shadow: 0 0 20px rgba(178,77,255,0.5);">SQUAD UP OR GO SOLO</h3>
+            <p class="font-exo text-gray-400 text-base sm:text-lg leading-relaxed mb-4">
+              The party system is fully operational. Create a squad of up to <span class="text-white font-semibold">8 players</span>, pick your mode, and run games back-to-back
+              without ever leaving the lobby. When the party master hits Play, the whole crew rides together.
+            </p>
+            <p class="font-exo text-gray-400 text-base sm:text-lg leading-relaxed">
+              Drop in as a guest instantly, or link your account to track your stats and climb the leaderboard.
+              Either way, you're building, editing, and shooting within <span class="text-white font-semibold">seconds</span>.
+            </p>
+          </div>
+        </div>
+
+        <!-- Features grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 max-w-6xl mx-auto mb-16">
+          <div class="feature-card bg-surface-800/30 border border-white/5 rounded-xl p-5 sm:p-6 text-center">
+            <div class="w-14 h-14 mx-auto mb-4 rounded-xl bg-gradient-to-br from-brand-500/20 to-brand-600/10 flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="1.5"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+            </div>
+            <h3 class="font-display text-sm font-bold text-white tracking-wide mb-2">ALL MODES</h3>
+            <p class="font-exo text-sm text-gray-500 leading-relaxed">1v1, Box 2v2, Zone Wars, Race + 8 custom modes. Every way to fight.</p>
+          </div>
+          <div class="feature-card bg-surface-800/30 border border-white/5 rounded-xl p-5 sm:p-6 text-center">
+            <div class="w-14 h-14 mx-auto mb-4 rounded-xl bg-gradient-to-br from-neon-cyan/20 to-neon-cyan/5 flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="1.5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <h3 class="font-display text-sm font-bold text-white tracking-wide mb-2">PARTY SYSTEM</h3>
+            <p class="font-exo text-sm text-gray-500 leading-relaxed">Squad up with friends. Up to 8 players, seamless matchmaking.</p>
+          </div>
+          <div class="feature-card bg-surface-800/30 border border-white/5 rounded-xl p-5 sm:p-6 text-center">
+            <div class="w-14 h-14 mx-auto mb-4 rounded-xl bg-gradient-to-br from-neon-purple/20 to-neon-purple/5 flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#b24dff" stroke-width="1.5"><path d="m13 2-2 2.5h3L12 7"/><path d="M10 14v-3"/><path d="M14 14v-3"/><path d="M11.5 17a3.5 3.5 0 1 0 0-7h-3a3.5 3.5 0 1 0 0 7"/><path d="M12 17v3"/><path d="M8 22h8"/></svg>
+            </div>
+            <h3 class="font-display text-sm font-bold text-white tracking-wide mb-2">ZERO INSTALL</h3>
+            <p class="font-exo text-sm text-gray-500 leading-relaxed">Pure browser. No downloads, no launcher, no waiting. Click and play.</p>
+          </div>
+          <div class="feature-card bg-surface-800/30 border border-white/5 rounded-xl p-5 sm:p-6 text-center">
+            <div class="w-14 h-14 mx-auto mb-4 rounded-xl bg-gradient-to-br from-neon-pink/20 to-neon-pink/5 flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ff2d95" stroke-width="1.5"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+            </div>
+            <h3 class="font-display text-sm font-bold text-white tracking-wide mb-2">FREE TO PLAY</h3>
+            <p class="font-exo text-sm text-gray-500 leading-relaxed">No paywalls, no premium passes. Just raw skill vs skill.</p>
+          </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="text-center animate-slide-up" style="animation-delay: 0.8s">
+          <a href="#play" class="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-400 text-white font-display font-bold text-lg tracking-wider rounded-xl transition-all duration-300 neon-glow hover:scale-105">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            PLAY NOW
+          </a>
+          <p class="font-exo text-gray-600 text-sm mt-4">No sign-up required. Just click and go.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- GLOWING DIVIDER -->
+    <div class="glow-divider max-w-4xl mx-auto my-4"></div>
+
+    <!-- MODE SHOWCASE -->
+    <section class="py-16 sm:py-20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6">
+        <h2 class="font-display text-2xl sm:text-3xl font-black tracking-wider text-center mb-12">
+          <span class="text-white">PICK YOUR</span> <span class="text-neon-cyan text-glow-cyan">BATTLEFIELD</span>
+        </h2>
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 max-w-4xl mx-auto">
+          <div class="bg-surface-800/40 border border-white/5 rounded-xl p-4 text-center hover:border-neon-cyan/20 transition group">
+            <div class="font-display text-2xl sm:text-3xl font-black text-neon-cyan group-hover:text-glow-cyan transition mb-1">1v1</div>
+            <div class="font-exo text-xs text-gray-500">Classic Duel</div>
+          </div>
+          <div class="bg-surface-800/40 border border-white/5 rounded-xl p-4 text-center hover:border-brand-400/20 transition group">
+            <div class="font-display text-2xl sm:text-3xl font-black text-brand-400 group-hover:text-glow transition mb-1">2v2</div>
+            <div class="font-exo text-xs text-gray-500">Box Fight</div>
+          </div>
+          <div class="bg-surface-800/40 border border-white/5 rounded-xl p-4 text-center hover:border-neon-purple/20 transition group">
+            <div class="font-display text-xl sm:text-2xl font-black text-neon-purple transition mb-1" style="text-shadow: 0 0 15px rgba(178,77,255,0.4);">ZONE</div>
+            <div class="font-exo text-xs text-gray-500">Zone Wars</div>
+          </div>
+          <div class="bg-surface-800/40 border border-white/5 rounded-xl p-4 text-center hover:border-neon-pink/20 transition group">
+            <div class="font-display text-xl sm:text-2xl font-black text-neon-pink transition mb-1" style="text-shadow: 0 0 15px rgba(255,45,149,0.4);">RACE</div>
+            <div class="font-exo text-xs text-gray-500">Build Race</div>
+          </div>
+        </div>
+        <p class="font-exo text-center text-gray-600 text-sm mt-6">+ 8 custom party modes: Box 1v1, Box 2v2, Zone 1v1, Zone 2v2, and more</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-white/5 py-8 relative z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 text-center">
+      <div class="font-display text-sm font-bold tracking-widest mb-3">
+        <span class="text-gray-500">1</span><span class="text-red-500/50">v</span><span class="text-gray-500">1</span><span class="text-neon-cyan/50">.</span><span class="text-gray-500">LOL RELOADED</span>
+      </div>
+      <p class="font-exo text-xs text-gray-600 mb-1">A community revival project. Not affiliated with the original developers.</p>
+      <p class="font-exo text-xs text-gray-700">Built with love for the game.</p>
+    </div>
+  </footer>
+
+  <!-- PORTAL JS -->
+  <script>
+    // === Fullscreen (only iframe→parent listener for Unity's own fullscreen button) ===
+    function toggleFullscreen() {
+      const container = document.getElementById('game-container');
+      if (!document.fullscreenElement) {
+        container.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen();
+      }
+    }
+    window.addEventListener('message', (e) => {
+      if (e.data === 'toggleFullscreen') toggleFullscreen();
+    });
+
+    // === Embed code ===
+    const embedEl = document.getElementById('embed-code');
+    const proto = window.location.protocol;
+    const host = window.location.host;
+    const embedSnippet = `<iframe src="${proto}//${host}/index.html" style="border:none; width:100%; aspect-ratio:16/9;" allow="fullscreen; autoplay; clipboard-write" allowfullscreen></iframe>`;
+    if (embedEl) embedEl.textContent = embedSnippet;
+
+    // Load unblocked URL from server settings
+    let _unblockedUrl = '';
+    fetch('/api/settings/public').then(r => r.json()).then(d => {
+      if (d.unblocked_url) {
+        _unblockedUrl = d.unblocked_url;
+        document.getElementById('unblocked-url').textContent = d.unblocked_url;
+        document.getElementById('unblocked-section').classList.remove('hidden');
+      }
+    }).catch(() => {});
+
+    function copyUnblocked() {
+      navigator.clipboard.writeText(_unblockedUrl).then(() => {
+        const btn = document.getElementById('copy-unblocked-btn');
+        btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Copied!';
+        setTimeout(() => {
+          btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg> Copy Link';
+        }, 2000);
+      });
+    }
+
+    function copyUnblockedEmbed() {
+      const code = '<iframe src="' + _unblockedUrl + '/index.html" style="border:none; width:100%; aspect-ratio:16/9;" allow="fullscreen; autoplay; clipboard-write" allowfullscreen></iframe>';
+      navigator.clipboard.writeText(code).then(() => {
+        const btn = document.getElementById('copy-unblocked-embed-btn');
+        btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Copied!';
+        setTimeout(() => {
+          btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg> Copy Code';
+        }, 2000);
+      });
+    }
+
+    function copyEmbed() {
+      navigator.clipboard.writeText(embedSnippet).then(() => {
+        const btn = document.getElementById('copy-btn');
+        btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Copied!';
+        setTimeout(() => {
+          btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg> Copy';
+        }, 2000);
+      });
+    }
+
+    // === Intersection Observer for scroll animations ===
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.animate-slide-up').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(30px)';
+      el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+      observer.observe(el);
+    });
+
+    // === Leaderboard ===
+    (function() {
+      const lbState = { mode: 'wins', period: 'alltime' };
+      function lbEsc(s) { const d = document.createElement('div'); d.textContent = s == null ? '' : String(s); return d.innerHTML; }
+      function lbDynVal(p) {
+        switch (lbState.mode) {
+          case 'wins': return p.wins;
+          case 'kills': return p.kills;
+          case 'rating_1v1': return p.rating_1v1;
+          case 'rating_box': return p.rating_box;
+          case 'rating_custom': return p.rating_custom;
+          case 'rating_elo': return p.rating_elo;
+        }
+        return p.wins;
+      }
+      async function lbLoad() {
+        try {
+          const r = await fetch('/api/leaderboard?mode=' + lbState.mode + '&period=' + lbState.period + '&limit=20');
+          const d = await r.json();
+          lbRender(d.players || []);
+          const u = document.getElementById('lb-updated');
+          if (u) u.textContent = 'Updated ' + new Date().toLocaleTimeString();
+        } catch (e) {
+          const rows = document.getElementById('lb-rows');
+          if (rows) rows.innerHTML = '<div class="px-6 py-12 text-center font-exo text-sm text-red-400">Failed to load</div>';
+        }
+      }
+      function lbRender(players) {
+        const rows = document.getElementById('lb-rows');
+        if (!rows) return;
+        if (players.length === 0) {
+          rows.innerHTML = '<div class="px-6 py-12 text-center font-exo text-sm text-gray-600">No registered players yet — sign in with Google and play to appear here!</div>';
+          return;
+        }
+        const dynLabel = ({ wins:'Wins', kills:'Kills', rating_1v1:'1v1', rating_box:'Box', rating_custom:'Custom', rating_elo:'Comp' })[lbState.mode] || 'Score';
+        const dynCol = document.getElementById('lb-dynamic-col');
+        if (dynCol) dynCol.textContent = dynLabel;
+        rows.innerHTML = players.map((p, i) => {
+          const rank = i + 1;
+          const rankCls = rank === 1 ? 'lb-rank-1' : rank === 2 ? 'lb-rank-2' : rank === 3 ? 'lb-rank-3' : 'text-gray-500';
+          const dyn = lbDynVal(p);
+          return '<div class="lb-row grid grid-cols-12 gap-2 sm:gap-4 px-4 sm:px-6 py-3 items-center">' +
+            '<div class="col-span-1 text-center font-display font-black text-base sm:text-lg ' + rankCls + '">' + rank + '</div>' +
+            '<div class="col-span-5 sm:col-span-4 min-w-0">' +
+              '<div class="font-exo font-semibold text-white text-sm sm:text-base truncate">' + lbEsc(p.name) + '</div>' +
+              '<div class="font-exo text-[10px] sm:text-xs text-gray-600">' + p.gamesPlayed + (p.gamesPlayed === 1 ? ' game' : ' games') + '</div>' +
+            '</div>' +
+            '<div class="col-span-2 text-right">' +
+              '<div class="font-exo font-semibold text-neon-cyan text-sm sm:text-base">' + p.wins + '</div>' +
+              '<div class="font-exo text-[10px] text-gray-600">' + p.winrate + '% WR</div>' +
+            '</div>' +
+            '<div class="col-span-2 text-right hidden sm:block">' +
+              '<div class="font-exo font-semibold text-white text-sm">' + p.kills + '</div>' +
+              '<div class="font-exo text-[10px] text-gray-600">' + p.deaths + ' dth</div>' +
+            '</div>' +
+            '<div class="col-span-2 text-right hidden sm:block">' +
+              '<div class="font-exo font-semibold text-white text-sm">' + p.kd + '</div>' +
+            '</div>' +
+            '<div class="col-span-2 sm:col-span-1 text-right">' +
+              '<div class="font-exo font-bold text-base sm:text-lg gradient-text">' + dyn + '</div>' +
+            '</div>' +
+          '</div>';
+        }).join('');
+      }
+      document.querySelectorAll('#lb-mode-tabs .lb-tab').forEach(b => {
+        b.addEventListener('click', () => {
+          document.querySelectorAll('#lb-mode-tabs .lb-tab').forEach(x => x.classList.remove('active'));
+          b.classList.add('active');
+          lbState.mode = b.dataset.mode;
+          lbLoad();
+        });
+      });
+      document.querySelectorAll('#lb-period-tabs .lb-tab').forEach(b => {
+        b.addEventListener('click', () => {
+          document.querySelectorAll('#lb-period-tabs .lb-tab').forEach(x => x.classList.remove('active'));
+          b.classList.add('active');
+          lbState.period = b.dataset.period;
+          lbLoad();
+        });
+      });
+      lbLoad();
+      setInterval(lbLoad, 30000);
+    })();
+  </script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"208631c72d3940b880b4920257a18a1b","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body>
+</html>
